@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit {
               container: 'position-absolute',
             },
             toast: true,
-            position: 'bottom-right',
+            position: 'top-right',
           });
           const idx = this.students.findIndex((q) => q._id === id);
           this.students.splice(idx, 1);
@@ -72,7 +72,7 @@ export class DashboardComponent implements OnInit {
               container: 'position-absolute',
             },
             toast: true,
-            position: 'bottom-right',
+            position: 'top-right',
           });
         });
       })
