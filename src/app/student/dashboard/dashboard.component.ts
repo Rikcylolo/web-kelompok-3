@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   students: Student[] = [];
@@ -19,14 +19,12 @@ export class DashboardComponent implements OnInit {
   constructor(
     private studentService: StudentService,
     private modalService: NgbModal
-  ) {
-    
-  }
+  ) {}
 
   ngOnInit(): void {
     this.studentService.getAll().subscribe((students: Student[]) => {
       this.students = students;
-    }) 
+    });
   }
 
   hapus(id: string) {
@@ -34,7 +32,7 @@ export class DashboardComponent implements OnInit {
       title: 'Are you sure want to delete?',
       showCloseButton: true,
       showDenyButton: true,
-      
+
       confirmButtonText: 'OK',
       denyButtonText: `Cancel`,
     }).then((result) => {
@@ -44,57 +42,62 @@ export class DashboardComponent implements OnInit {
             text: 'Employee was deleted',
             target: '#custom-target',
             customClass: {
-              container: 'position-absolute'
+              container: 'position-absolute',
             },
             toast: true,
-            position: 'bottom-right'
-          }
-          )
-          const idx = this.students.findIndex(q => q._id === id);
+            position: 'bottom-right',
+          });
+          const idx = this.students.findIndex((q) => q._id === id);
           this.students.splice(idx, 1);
         });
       }
-    })
+    });
   }
 
   editModal(student: Student, id: string) {
-    const modal = this.modalService.open(EditStudentComponent, {centered: true, ariaLabelledBy: 'modal-basic-title'});
+    const modal = this.modalService.open(EditStudentComponent, {
+      centered: true,
+      ariaLabelledBy: 'modal-basic-title',
+    });
     modal.componentInstance.student = student;
-    modal.result.then(student => {
-      this.studentService.update(id, student)
-      .subscribe(student => {
-        const idx = this.students.findIndex(q => q._id === id);
-        this.students[idx] = {...this.students[idx], ...student};
-        Swal.fire({
-          text: 'Employee was updated',
-          target: '#custom-target',
-          customClass: {
-            container: 'position-absolute'
-          },
-          toast: true,
-          position: 'bottom-right'
-        }
-        )
-      });
-    }).catch(e => console.log(e));
+    modal.result
+      .then((student) => {
+        this.studentService.update(id, student).subscribe((student) => {
+          const idx = this.students.findIndex((q) => q._id === id);
+          this.students[idx] = { ...this.students[idx], ...student };
+          Swal.fire({
+            text: 'Employee was updated',
+            target: '#custom-target',
+            customClass: {
+              container: 'position-absolute',
+            },
+            toast: true,
+            position: 'bottom-right',
+          });
+        });
+      })
+      .catch((e) => console.log(e));
   }
 
   addModal() {
-    const modal = this.modalService.open(AddStudentComponent, {centered: true});
-    modal.result.then(student => {
-      this.studentService.create(student)
-      .subscribe(student => this.students.push(student));
-      Swal.fire({
-        text: 'Employee was added',
-        target: '#custom-target',
-        customClass: {
-          container: 'position-absolute'
-        },
-        toast: true,
-        position: 'bottom-right'
-      }
-      )
-    }).catch(e => console.log(e));
+    const modal = this.modalService.open(AddStudentComponent, {
+      centered: true,
+    });
+    modal.result
+      .then((student) => {
+        this.studentService
+          .create(student)
+          .subscribe((student) => this.students.push(student));
+        Swal.fire({
+          text: 'Employee was added',
+          target: '#custom-target',
+          customClass: {
+            container: 'position-absolute',
+          },
+          toast: true,
+          position: 'top-right',
+        });
+      })
+      .catch((e) => console.log(e));
   }
-
 }
